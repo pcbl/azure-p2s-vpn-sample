@@ -1,3 +1,12 @@
+#Cloud Vnet, where the VM will be
+resource "azurerm_subnet" "cloudSubnet" {
+  name                 = "cloudSubnet" 
+  resource_group_name  = azurerm_resource_group.main.name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.1.1.0/24"]
+}
+
+#The Network card, connected to our cloud subnet
 resource "azurerm_network_interface" "vmNic" {
   name                = "test-vm-nic"
   location            = azurerm_resource_group.main.location
@@ -5,11 +14,12 @@ resource "azurerm_network_interface" "vmNic" {
   tags                = local.tags
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.localSubnet.id
+    subnet_id                     = azurerm_subnet.cloudSubnet.id
     private_ip_address_allocation = "Dynamic"
   }
 }
 
+#And the test VM, just a small(Standard_B1ls) one to play arorund
 resource "azurerm_linux_virtual_machine" "testVm" {
   name                = "test-vm"
   tags                = local.tags

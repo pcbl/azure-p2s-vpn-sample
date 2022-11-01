@@ -22,7 +22,7 @@ locals {
     }
   )
 
-  environment_suffix = "uat"
+  environment_suffix = "prd"
   
   #Base64 fromt he generated CA for tests...
   #openssl x509 -in caCert.pem -outform der | base64
